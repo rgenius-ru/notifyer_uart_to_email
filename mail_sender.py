@@ -2,13 +2,9 @@ import smtplib
 import ssl
 import csv
 import logging
+from mail_sender_config import smtp_server, port, sender_email, password
 
 logger = logging.getLogger('notifier_uart_to_email')  # Create a custom logger
-
-port = 587  # For starttls
-smtp_server = "smtp.mail.ru"
-sender_email = "notifyer.test1@mail.ru"
-password = '3Uap(aYTpaU9'  # input("Type your password and press enter:")
 
 default_message = """
 Неизвестная ошибка
