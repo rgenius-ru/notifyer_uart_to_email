@@ -25,17 +25,17 @@ while True:
         time.sleep(1)
 
         if base_station.errors:
-            message = None
+            message = ''
 
             for error in base_station.errors:
                 if error == 1 and error1.timer.time_is_over():
-                    message = 'Error ' + str(error)
+                    message += 'Error ' + str(error) + '   '
                 if error == 2 and error2.timer.time_is_over():
-                    message = 'Error ' + str(error)
+                    message += 'Error ' + str(error) + '   '
                 if error == 3 and error3.timer.time_is_over():
-                    message = 'Error ' + str(error)
+                    message += 'Error ' + str(error) + '   '
                 if error == 4 and error4.timer.time_is_over():
-                    message = 'Error ' + str(error)
+                    message += 'Error ' + str(error) + '   '
 
             if message:
                 print(pc_str, 'Email message:', message)
