@@ -3,10 +3,10 @@ from uart import BaseStation
 from mail_sender import notify_all
 from errors import Errors
 
-error1 = Errors(timeout_sec=60)
-error2 = Errors(timeout_sec=60)
-error3 = Errors(timeout_sec=60)
-error4 = Errors(timeout_sec=60)
+error1 = Errors(timeout_sec=3600)
+error2 = Errors(timeout_sec=3600)
+error3 = Errors(timeout_sec=3600)
+error4 = Errors(timeout_sec=3600)
 
 pc_str = '[PC program]'
 

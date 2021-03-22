@@ -4,6 +4,12 @@ import csv
 import logging
 from config import smtp_server, port, sender_email, password
 
+# From config:
+# smtp_server = ''
+# port = 587  # For start tls
+# sender_email = ''
+# password = ''
+
 logger = logging.getLogger('notifier_uart_to_email')  # Create a custom logger
 
 default_message = """
