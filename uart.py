@@ -105,16 +105,25 @@ class SearchingBase(Thread):
         if self.received_data != '':
             self.timer.restart()
             _start = self.received_data
+            print(self.received_data)
             if self.received_data.count('*** Error 4 ***'):
-                print(self.received_data)
                 print(pc_str, 'Stop listening port:', self.port, 'Reason:', self.received_data)
-                self.errors.append(4)
+                if 4 not in self.errors:
+                    self.errors.append(4)
                 self.is_stopped = True
                 self.is_connected = False
                 self.stop()
                 return None
-            elif _start == 'Sensors-DD-1.0' or _start[:3] == 'dd1' or _start[:3] == '***':
-                print(self.received_data)
+            if self.received_data.count('*** Error 1 ***'):
+                if 1 not in self.errors:
+                    self.errors.append(1)
+            if self.received_data.count('*** Error 2 ***'):
+                if 2 not in self.errors:
+                    self.errors.append(2)
+            if self.received_data.count('*** Error 3 ***'):
+                if 3 not in self.errors:
+                    self.errors.append(3)
+            if _start == 'Sensors-DD-1.0' or _start[:3] == 'dd1' or _start[:3] == '***':
                 self.is_connected = True
 
         # print(self.is_left_connected, self.is_right_connected)
