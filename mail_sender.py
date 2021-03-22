@@ -2,7 +2,7 @@ import smtplib
 import ssl
 import csv
 import logging
-from mail_sender_config import smtp_server, port, sender_email, password
+from config import smtp_server, port, sender_email, password
 
 logger = logging.getLogger('notifier_uart_to_email')  # Create a custom logger
 
