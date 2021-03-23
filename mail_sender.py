@@ -2,7 +2,15 @@ import smtplib
 import ssl
 import csv
 import logging
-from config import smtp_server, port, sender_email, password
+from configparser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('config.ini')
+
+for candidate in ['smtp_server', 'port', 'sender_email', 'password']:
+    print('%-12s: %s' % (candidate, parser.has_section(candidate)))
+
+# parser.get('email', )
 
 # From config:
 # smtp_server = ''
