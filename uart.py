@@ -70,6 +70,10 @@ class SearchingBase(Thread):
 
     def run(self):
         s, port = self._searching_base_station()
+        if not s:
+            self.stop()
+            print(pc_str, 'Can not find any serial port')
+            exit(1)
 
         self.timer.start()
 
@@ -80,6 +84,7 @@ class SearchingBase(Thread):
                 self.stop()
 
     def stop(self):
+        self.is_stopped = True
         self._running = False
 
     def receive(self):

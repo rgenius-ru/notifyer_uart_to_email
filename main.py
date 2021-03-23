@@ -15,6 +15,9 @@ base_station = BaseStation()
 base_station.start()
 
 while not base_station.is_connected:  # Wait connection
+    if base_station.is_stopped:
+        print(pc_str, 'Stop')
+        exit(1)
     print(pc_str, 'Not connected')
     time.sleep(1)
 
