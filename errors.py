@@ -43,7 +43,7 @@ class Timer:
 
 
 class Errors:
-    def __init__(self, timeout_sec):
+    def __init__(self, timeout_sec=3600):
         self.timer = Timer(timeout_sec)
         self._state = False
 

@@ -234,8 +234,8 @@ class SearchingBase(Thread):
 
 
 class BaseStation(SearchingBase):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, port=None):
+        super().__init__(port)
 
 
 if __name__ == '__main__':

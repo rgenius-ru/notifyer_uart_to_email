@@ -2,16 +2,16 @@ import time
 from uart import BaseStation
 from mail_sender import notify_all
 from errors import Errors
-from config import smtp_server, port, sender_email, password
+from config import smtp_server, smtp_port, sender_email, password, error_send_interval, serial_port
 
-error1 = Errors(timeout_sec=3600)
-error2 = Errors(timeout_sec=3600)
-error3 = Errors(timeout_sec=3600)
-error4 = Errors(timeout_sec=3600)
+error1 = Errors(timeout_sec=error_send_interval)
+error2 = Errors(timeout_sec=error_send_interval)
+error3 = Errors(timeout_sec=error_send_interval)
+error4 = Errors(timeout_sec=error_send_interval)
 
 pc_str = '[PC program]'
 
-base_station = BaseStation()
+base_station = BaseStation(port=serial_port)
 base_station.start()
 
 while not base_station.is_connected:  # Wait connection
@@ -43,7 +43,7 @@ while True:
 
             if message:
                 print(pc_str, 'Email message:', message)
-                notify_all(message, smtp_server, port, sender_email, password)
+                notify_all(message, smtp_server, smtp_port, sender_email, password)
 
             base_station.errors = []
 
