@@ -2,21 +2,8 @@ import smtplib
 import ssl
 import csv
 import logging
-from configparser import SafeConfigParser
 
-parser = SafeConfigParser()
-parser.read('config.ini')
-
-for candidate in ['smtp_server', 'port', 'sender_email', 'password']:
-    print('%-12s: %s' % (candidate, parser.has_section(candidate)))
-
-# parser.get('email', )
-
-# From config:
-# smtp_server = ''
-# port = 587  # For start tls
-# sender_email = ''
-# password = ''
+pc_str = '[PC program Mail sender]'
 
 logger = logging.getLogger('notifier_uart_to_email')  # Create a custom logger
 
@@ -24,10 +11,8 @@ default_message = """
 Неизвестная ошибка
 """
 
-pc_str = '[PC program Mail sender]'
 
-
-def send_email(receiver_email, _message):
+def send_email(receiver_email, _message, smtp_server, port, sender_email, password):
     if not _message:
         _message = default_message
     context = ssl.create_default_context()
@@ -42,10 +27,10 @@ def send_email(receiver_email, _message):
             logger.error(err, exc_info=False, extra={'email: ': receiver_email})
 
 
-def notify_all(_message):
+def notify_all(_message, smtp_server, port, sender_email, password):
     with open("contacts.csv") as file:
         reader = csv.reader(file)
         next(reader)  # Skip header row
         for name, email, grade in reader:
             print(pc_str, f"Отправка письма: {name}")
-            send_email(email, _message)
+            send_email(email, _message, smtp_server, port, sender_email, password)
