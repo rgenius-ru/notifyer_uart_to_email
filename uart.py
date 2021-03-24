@@ -67,14 +67,17 @@ class SearchingBase(Thread):
         self.search_timer = Timer(15)
         self.is_stopped = False
         self.errors = []
+        self._serial = None
 
     def run(self):
         s, port = self._searching_base_station()
+
         if not s:
             self.stop()
             print(pc_str, 'Can not find any serial port')
             exit(1)
 
+        self._serial = s
         self.timer.start()
 
         while self._running:
@@ -136,7 +139,8 @@ class SearchingBase(Thread):
         return self.received_data
 
     def _wait_receive(self, _port, _timeout=1):
-        _serial = serial.Serial(_port, self.baud, timeout=_timeout)
+        # _serial = serial.Serial(_port, self.baud, timeout=_timeout)
+        _serial = self._serial
         _string = None
 
         if _serial.isOpen():
@@ -154,20 +158,26 @@ class SearchingBase(Thread):
         return _string
 
     def _all_serial_ports(self):
+        ports = []
+
+        if self.port:
+            ports += [self.port]
+
         if sys.platform.startswith('win'):
-            ports = ['COM%s' % (i + 1) for i in range(256)]
+            ports += ['COM%s' % (i + 1) for i in range(256)]
         elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
             # this excludes your current terminal "/dev/tty"
-            ports = glob.glob('/dev/ttyUSB*')  # ubuntu is /dev/ttyUSB0
+            ports += glob.glob('/dev/ttyUSB*')  # ubuntu is /dev/ttyUSB0
             ports += glob.glob('/dev/ttyACM*')
         elif sys.platform.startswith('darwin'):
             # ports = glob.glob('/dev/tty.*')
-            ports = glob.glob('/dev/tty.SLAB_USBtoUART*')
+            ports = +glob.glob('/dev/tty.SLAB_USBtoUART*')
         else:
             raise EnvironmentError('Unsupported platform')
+
         self._ports = ports
 
-        return self._ports is not None
+        return self._ports != []
 
     def _searching_base_station(self):
         print(pc_str, 'Base station search...')
@@ -209,24 +219,28 @@ class SearchingBase(Thread):
                 except UnicodeEncodeError as err:
                     self.port = None
                     self.is_connected = False
+                    self.search_timer.stop()
                     print(pc_str, 'Base station not found')
                     print(pc_str, 'ERROR:', err)
                     return None, None
                 except serial.SerialException as e:
                     if e.errno == 13:
                         raise e
-                    self.port = None
-                    self.is_connected = False
-                    print(pc_str, 'Base station not found')
-                    return None, None
+                    self.search_timer.stop()
+                    # self.port = None
+                    # self.is_connected = False
+                    print(pc_str, e)
+                    # return None, None
                 except OSError:
                     self.port = None
                     self.is_connected = False
+                    self.search_timer.stop()
                     print(pc_str, 'Base station not found')
                     return None, None
 
             self.port = None
             self.is_connected = False
+            self.search_timer.stop()
             print(pc_str, 'Base station not found')
             return None, None
 
